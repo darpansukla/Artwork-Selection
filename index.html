@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Student Artwork Selection</title>
+    <title>Exhibition Artwork Selection</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -14,9 +14,14 @@
             padding-bottom: 120px;
         }
         .artwork-card.selected {
-            border-color: #4f46e5;
-            background-color: #e0e7ff;
+            border-color: #6366f1;
+            background-color: #eef2ff;
             transform: scale(0.98);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
         }
         ::-webkit-scrollbar {
             width: 4px;
@@ -31,108 +36,244 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body class="min-h-screen flex flex-col justify-between relative overflow-x-hidden">
 
-    <!-- Top Header -->
-    <header class="bg-indigo-600 text-white shadow-md sticky top-0 z-30 px-4 py-3 flex justify-between items-center">
-        <div>
-            <h1 class="text-lg font-bold tracking-tight"><i class="fa-solid fa-palette mr-2"></i>Art Selection</h1>
-            <p class="text-xs text-indigo-200">Choose exactly 2 artworks</p>
-        </div>
-        <button id="refreshBtn" onclick="loadData()" class="bg-indigo-700 hover:bg-indigo-800 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center shadow-sm">
-            <i class="fa-solid fa-rotate mr-1.5"></i> Refresh
-        </button>
-    </header>
+    <!-- Decorative Background Ambient Elements -->
+    <div class="absolute top-0 right-0 w-72 h-72 bg-indigo-100/50 rounded-full blur-3xl pointer-events-none -z-10"></div>
+    <div class="absolute top-1/3 left-0 w-72 h-72 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
 
-    <!-- Main Container -->
-    <main class="max-w-md mx-auto p-4 space-y-4">
-
-        <!-- Step 1: Student Selection Card (First Screen Focus) -->
-        <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-            <label for="studentSelect" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                <i class="fa-solid fa-user-graduate mr-1 text-indigo-500"></i> Select Your Name (A-Z)
-            </label>
-            <div class="relative">
-                <select id="studentSelect" onchange="onStudentSelected()" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl px-3.5 py-3 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-medium">
-                    <option value="" disabled selected>-- Choose your name --</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                    <i class="fa-solid fa-chevron-down text-xs"></i>
+    <div class="w-full">
+        <!-- Top App Header -->
+        <header class="px-6 pt-6 pb-4 flex justify-between items-start">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20">
+                    <i class="fa-solid fa-palette text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-extrabold text-slate-900 tracking-tight">Exhibition Artwork Selection</h1>
+                    <p class="text-[11px] text-slate-500 font-medium tracking-wide">Explore • Select • Showcase</p>
                 </div>
             </div>
-        </section>
+            <button onclick="loadAllData()" class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-indigo-600 flex items-center justify-center shadow-sm transition" title="Refresh Data">
+                <i class="fa-solid fa-rotate-right text-xs"></i>
+            </button>
+        </header>
 
-        <!-- Gallery Section (Hidden initially until student name is chosen) -->
-        <div id="gallerySection" class="hidden space-y-4 transition-all duration-300">
-            
-            <!-- Student Greeting Banner -->
-            <div class="bg-indigo-50 border border-indigo-100 text-indigo-800 px-4 py-2.5 rounded-xl text-xs flex items-center justify-between">
-                <span>Welcome, <strong id="greetingName" class="font-bold"></strong>!</span>
-                <button onclick="changeStudent()" class="text-indigo-600 underline text-[11px] font-semibold hover:text-indigo-800">Change Name</button>
+        <!-- Main Container -->
+        <main class="max-w-md mx-auto px-5 space-y-5">
+
+            <!-- HOME DASHBOARD VIEW (Visible initially) -->
+            <div id="homeDashboard" class="space-y-6">
+                <!-- Hero Welcome Banner Card -->
+                <div class="relative bg-gradient-to-br from-indigo-50/80 via-white to-purple-50/50 rounded-3xl p-6 border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="absolute right-[-20px] bottom-[-20px] w-32 h-32 opacity-15 pointer-events-none">
+                        <i class="fa-solid fa-paintbrush text-9xl text-indigo-600"></i>
+                    </div>
+                    <div class="relative z-10 space-y-2">
+                        <h2 class="text-2xl font-black text-slate-900 leading-tight">
+                            Welcome to <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Exhibition Artwork Selection</span>
+                        </h2>
+                        <p class="text-xs text-slate-500 font-medium leading-relaxed max-w-[240px]">
+                            Choose your artwork or check your submission status easily.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Two Action Cards Grid -->
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Student Select Card -->
+                    <div onclick="switchToStudentSelect()" class="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-md transition cursor-pointer group">
+                        <div class="space-y-3">
+                            <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shadow-inner group-hover:scale-105 transition">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-900">Student Select</h3>
+                                <p class="text-[11px] text-slate-500 mt-1 leading-snug">Choose your name and proceed to the art gallery.</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs shadow-md shadow-indigo-500/30 group-hover:translate-x-1 transition">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Check Card -->
+                    <div onclick="openStatusModal()" class="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-md transition cursor-pointer group">
+                        <div class="space-y-3">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-inner group-hover:scale-105 transition">
+                                <i class="fa-solid fa-clipboard-check"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-900">Status Check</h3>
+                                <p class="text-[11px] text-slate-500 mt-1 leading-snug">Check your submission status anytime.</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs shadow-md shadow-emerald-500/30 group-hover:translate-x-1 transition">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Artwork Gallery Header -->
-            <div class="flex justify-between items-center px-1 pt-2">
-                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500">
-                    <i class="fa-solid fa-images mr-1 text-indigo-500"></i> Available Artworks
-                </h2>
-                <span id="selectionCounter" class="text-xs font-semibold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full">
-                    0 / 2 Selected
-                </span>
+            <!-- STUDENT SELECTION VIEW (Hidden by default) -->
+            <section id="studentSelectionSection" class="hidden bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-5">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <button onclick="backToHome()" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center">
+                        <i class="fa-solid fa-arrow-left mr-1.5"></i> Back to Home
+                    </button>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Step 1 of 2</span>
+                </div>
+
+                <div>
+                    <label for="studentSelect" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                        <i class="fa-solid fa-user-graduate mr-1 text-indigo-500"></i> Select Your Name (A-Z)
+                    </label>
+                    <div class="relative">
+                        <select id="studentSelect" onchange="onStudentSelected()" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-2xl px-4 py-3.5 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-medium">
+                            <option value="" disabled selected>-- Choose your name --</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="proceedBtn" onclick="proceedToGallery()" disabled class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-2xl text-sm shadow-lg shadow-indigo-500/25 transition flex items-center justify-center">
+                    <span>Proceed to Art Gallery</span>
+                    <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </section>
+
+            <!-- ARTWORK GALLERY SECTION (Hidden initially) -->
+            <div id="gallerySection" class="hidden space-y-4 transition-all duration-300">
+                
+                <!-- Enhanced Student Header Banner with Photo, Verified Badge & Class -->
+                <div class="bg-gradient-to-r from-indigo-50/90 via-white to-indigo-50/50 border border-indigo-100/80 text-indigo-900 p-4 rounded-3xl flex items-center justify-between shadow-sm backdrop-blur-sm">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="relative flex-shrink-0">
+                            <div class="w-12 h-12 rounded-full bg-white overflow-hidden border-2 border-indigo-600 shadow-sm">
+                                <img id="galleryStudentPhoto" src="" alt="Photo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=Photo';">
+                            </div>
+                            <!-- Verified Check Badge Overlay -->
+                            <div class="absolute -bottom-0.5 -right-0.5 bg-emerald-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm" title="Verified Student">
+                                <i class="fa-solid fa-check text-[7px]"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="text-[10px] uppercase tracking-wider font-extrabold text-indigo-600">Verified Student</span>
+                            </div>
+                            <h3 id="galleryStudentName" class="text-xs font-black text-slate-900 tracking-tight mt-0.5"></h3>
+                            <p class="text-[11px] text-slate-600 font-medium mt-0.5">Class: <span id="galleryStudentClass" class="font-bold text-indigo-700">-</span></p>
+                        </div>
+                    </div>
+                    <button onclick="backToStudentSelect()" class="text-indigo-600 bg-white border border-indigo-200 px-3 py-1.5 rounded-xl text-[11px] font-semibold hover:bg-indigo-50 transition shadow-sm flex-shrink-0">Change</button>
+                </div>
+
+                <!-- Artwork Gallery Header -->
+                <div class="flex justify-between items-center px-1 pt-1">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center">
+                        <i class="fa-solid fa-images mr-1.5 text-indigo-500"></i> Available Artworks
+                    </h2>
+                    <span id="selectionCounter" class="text-xs font-semibold bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">
+                        0 / 2 Selected
+                    </span>
+                </div>
+
+                <!-- Artwork Grid -->
+                <div id="artworkGrid" class="grid grid-cols-2 gap-3.5">
+                    <!-- Dynamically populated artwork cards -->
+                </div>
+
+                <!-- Empty state message -->
+                <div id="emptyGallery" class="hidden text-center py-10 bg-white rounded-3xl border border-dashed border-slate-300 p-6">
+                    <i class="fa-solid fa-box-open text-slate-300 text-4xl mb-2"></i>
+                    <p class="text-sm font-semibold text-slate-600">No artworks available</p>
+                    <p class="text-xs text-slate-400 mt-1">All artworks have been claimed.</p>
+                </div>
             </div>
 
-            <!-- Artwork Grid -->
-            <div id="artworkGrid" class="grid grid-cols-2 gap-3">
-                <!-- Dynamically populated artwork cards will appear here -->
-            </div>
+        </main>
+    </div>
 
-            <!-- Empty state message -->
-            <div id="emptyGallery" class="hidden text-center py-10 bg-white rounded-2xl border border-dashed border-slate-300 p-6">
-                <i class="fa-solid fa-box-open text-slate-300 text-4xl mb-2"></i>
-                <p class="text-sm font-semibold text-slate-600">No artworks available</p>
-                <p class="text-xs text-slate-400 mt-1">All artworks have been claimed.</p>
-            </div>
+    <!-- Professional Footer / Credit -->
+    <footer class="text-center py-8 px-4 text-xs text-slate-400 font-medium space-y-2 mt-auto">
+        <div class="flex items-center justify-center space-x-2 text-slate-300">
+            <span class="h-px w-12 bg-slate-200"></span>
+            <i class="fa-solid fa-palette text-indigo-500 text-[10px]"></i>
+            <span class="h-px w-12 bg-slate-200"></span>
         </div>
+        <p class="text-slate-500 font-semibold tracking-wide">Exhibition Artwork Selection System</p>
+        <p class="text-slate-600 font-bold">Designed & Developed by <span class="text-indigo-600">Darpan Sukla</span></p>
+        <p class="text-[10px] text-slate-400 uppercase tracking-widest pt-1">Art Makes A Brighter Tomorrow</p>
+    </footer>
 
-    </main>
-
-    <!-- Sticky Bottom Action Bar -->
-    <div id="bottomBar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-lg z-40 transition-transform transform translate-y-full">
+    <!-- Sticky Bottom Action Bar for Gallery Submission -->
+    <div id="bottomBar" class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-4 shadow-2xl z-40 transition-transform transform translate-y-full">
         <div class="max-w-md mx-auto flex items-center justify-between gap-3">
             <div>
-                <p class="text-xs text-slate-500 font-medium">Your Selection:</p>
-                <p id="selectedSummary" class="text-sm font-bold text-indigo-600">None chosen</p>
+                <p class="text-[11px] text-slate-400 font-medium">Your Selection:</p>
+                <p id="selectedSummary" class="text-xs font-bold text-indigo-600">None chosen</p>
             </div>
-            <button id="submitBtn" onclick="submitSelections()" disabled class="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold px-5 py-3 rounded-xl text-sm shadow-md transition flex items-center">
+            <button id="submitBtn" onclick="submitSelections()" disabled class="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold px-5 py-3 rounded-2xl text-xs shadow-lg shadow-indigo-500/25 transition flex items-center">
                 <span>Submit Choices</span>
                 <i class="fa-solid fa-arrow-right ml-2"></i>
             </button>
         </div>
     </div>
 
+    <!-- Status Check Modal -->
+    <div id="statusModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeStatusModal()">
+        <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center">
+                    <i class="fa-solid fa-list-check mr-2 text-indigo-500"></i> Selection Status
+                </h3>
+                <button onclick="closeStatusModal()" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 transition">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <div id="statusListContainer" class="space-y-2.5 overflow-y-auto pr-1 flex-1 max-h-64">
+                <p class="text-xs text-slate-400 italic text-center py-4">Loading status records...</p>
+            </div>
+            <button onclick="closeStatusModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-2xl text-xs transition">
+                Close
+            </button>
+        </div>
+    </div>
+
     <!-- Image Preview Modal -->
-    <div id="imageModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeImageModal()">
+    <div id="imageModal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md" onclick="closeImageModal()">
         <div class="relative max-w-full max-h-full flex flex-col items-center" onclick="event.stopPropagation()">
             <button onclick="closeImageModal()" class="absolute -top-12 right-0 text-white bg-white/20 hover:bg-white/30 rounded-full w-9 h-9 flex items-center justify-center transition">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-            <img id="modalImg" src="" alt="Full Artwork Preview" class="max-h-[80vh] max-w-full rounded-xl object-contain shadow-2xl border border-white/10">
-            <p id="modalCaption" class="text-white text-sm font-semibold mt-3 text-center"></p>
+            <img id="modalImg" src="" alt="Full Artwork Preview" class="max-h-[80vh] max-w-full rounded-2xl object-contain shadow-2xl border border-white/10">
+            <p id="modalCaption" class="text-white text-xs font-semibold mt-3 text-center"></p>
         </div>
     </div>
 
     <!-- JavaScript Logic -->
     <script>
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoptCqW99E3V3uVns4omqu8Cd77Y4aBTXG0PcVJsSDSKWfjmPLs4yB62-iIwcJVSkOykM9cCREfmpk/pub?gid=0&single=true&output=csv';
+        const REG_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR9MYoRpbaJg7oK3vqkTjfsm616eD9xvUeeE3DxTSzWCF5gCdBOdqfnQQbbwbnycXopvrScE5kg-3R6/pub?gid=0&single=true&output=csv';
+        const GALLERY_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoptCqW99E3V3uVns4omqu8Cd77Y4aBTXG0PcVJsSDSKWfjmPLs4yB62-iIwcJVSkOykM9cCREfmpk/pub?gid=0&single=true&output=csv';
+        const STATUS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoptCqW99E3V3uVns4omqu8Cd77Y4aBTXG0PcVJsSDSKWfjmPLs4yB62-iIwcJVSkOykM9cCREfmpk/pub?gid=187349902&single=true&output=csv';
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDUtB4o0SuybD1c7enXqp5U4CT0_JqyMh-AS0eJG8bGPSiilzfVl7zLKh_VKPEQw3v/exec';
 
+        let studentsDataMap = new Map();
         let allArtworks = [];
         let claimedArtworkNos = new Set();
-        let studentNames = [];
-        let selectedArtworks = []; // Array of {no, link}
+        let studentSubmissionsMap = new Map();
+        let selectedArtworks = [];
+        let currentSelectedStudent = null;
 
         window.addEventListener('DOMContentLoaded', () => {
-            loadData();
+            loadAllData();
         });
 
         function parseCSV(text) {
@@ -162,51 +303,121 @@
             return result;
         }
 
-        async function loadData() {
-            try {
-                const response = await fetch(CSV_URL + '&cacheBuster=' + new Date().getTime());
-                const csvText = await response.text();
-                const rows = parseCSV(csvText);
+        async function loadAllData() {
+            await Promise.all([
+                loadRegistrationData(),
+                loadStatusAndGalleryData()
+            ]);
+        }
 
+        async function loadRegistrationData() {
+            try {
+                const res = await fetch(REG_CSV_URL + '&cacheBuster=' + new Date().getTime());
+                const text = await res.text();
+                const rows = parseCSV(text);
                 if (rows.length < 2) return;
 
                 const headers = rows[0].map(h => h.toLowerCase().replace(/[^a-z0-9]/g, ''));
-                
-                let nameIdx = headers.findIndex(h => h.includes('student') || h.includes('name'));
-                let noIdx = headers.findIndex(h => h.includes('artworkno') || h.includes('no'));
-                let linkIdx = headers.findIndex(h => h.includes('link') || h.includes('url'));
+                let nameIdx = headers.findIndex(h => h.includes('studentname') || h.includes('name'));
+                let regIdx = headers.findIndex(h => h.includes('registrationid') || h.includes('id'));
+                let classIdx = headers.findIndex(h => h.includes('fineartsclass') || h.includes('class'));
+                let photoIdx = headers.findIndex(h => h.includes('photourl') || h.includes('photo'));
 
-                if (nameIdx === -1) nameIdx = 0;
-                if (noIdx === -1) noIdx = 1;
-                if (linkIdx === -1) linkIdx = 2;
+                if (nameIdx === -1) nameIdx = 3;
+                if (regIdx === -1) regIdx = 1;
+                if (classIdx === -1) classIdx = 16;
+                if (photoIdx === -1) photoIdx = 17;
 
-                studentNames = [];
-                allArtworks = [];
-                claimedArtworkNos.clear();
+                studentsDataMap.clear();
 
                 for (let i = 1; i < rows.length; i++) {
                     let r = rows[i];
                     if (!r || r.length === 0) continue;
+                    let name = r[nameIdx] ? r[nameIdx].replace(/^["']|["']$/g, '').trim() : '';
+                    if (!name) continue;
 
-                    let student = r[nameIdx] ? r[nameIdx].replace(/^["']|["']$/g, '').trim() : '';
-                    let artNo = r[noIdx] ? r[noIdx].replace(/^["']|["']$/g, '').trim() : '';
-                    let artLink = r[linkIdx] ? r[linkIdx].replace(/^["']|["']$/g, '').trim() : '';
+                    let regId = r[regIdx] ? r[regIdx].replace(/^["']|["']$/g, '').trim() : 'N/A';
+                    let sClass = r[classIdx] ? r[classIdx].replace(/^["']|["']$/g, '').trim() : 'N/A';
+                    let photoUrl = r[photoIdx] ? r[photoIdx].replace(/^["']|["']$/g, '').trim() : '';
 
-                    if (student && !studentNames.includes(student)) {
-                        studentNames.push(student);
-                    }
-
-                    if (artNo && artLink) {
-                        allArtworks.push({
-                            no: artNo,
-                            link: artLink
-                        });
-                    }
+                    studentsDataMap.set(name, {
+                        name: name,
+                        regId: regId,
+                        className: sClass,
+                        photoUrl: cleanImageUrl(photoUrl)
+                    });
                 }
 
                 populateStudentDropdown();
             } catch (err) {
-                console.error("Failed to load data", err);
+                console.error("Error loading registration data", err);
+            }
+        }
+
+        async function loadStatusAndGalleryData() {
+            try {
+                const statusRes = await fetch(STATUS_CSV_URL + '&cacheBuster=' + new Date().getTime());
+                const statusText = await statusRes.text();
+                const statusRows = parseCSV(statusText);
+                
+                claimedArtworkNos.clear();
+                studentSubmissionsMap.clear();
+
+                if (statusRows.length > 1) {
+                    const sHeaders = statusRows[0].map(h => h.toLowerCase().replace(/[^a-z0-9]/g, ''));
+                    let sNameIdx = sHeaders.findIndex(h => h.includes('student') || h.includes('name')) !== -1 ? sHeaders.findIndex(h => h.includes('student') || h.includes('name')) : 1;
+                    let sNoIdx = sHeaders.findIndex(h => h.includes('artworkno') || h.includes('no')) !== -1 ? sHeaders.findIndex(h => h.includes('artworkno') || h.includes('no')) : 2;
+
+                    for (let i = 1; i < statusRows.length; i++) {
+                        let r = statusRows[i];
+                        if (!r || r.length === 0) continue;
+                        let student = r[sNameIdx] ? r[sNameIdx].replace(/^["']|["']$/g, '').trim() : '';
+                        let artNo = r[sNoIdx] ? r[sNoIdx].replace(/^["']|["']$/g, '').trim() : '';
+                        
+                        if (artNo) {
+                            claimedArtworkNos.add(artNo);
+                            if (student) {
+                                if (!studentSubmissionsMap.has(student)) {
+                                    studentSubmissionsMap.set(student, []);
+                                }
+                                studentSubmissionsMap.get(student).push(artNo);
+                            }
+                        }
+                    }
+                }
+
+                renderStatusList();
+
+                const galRes = await fetch(GALLERY_CSV_URL + '&cacheBuster=' + new Date().getTime());
+                const galText = await galRes.text();
+                const galRows = parseCSV(galText);
+                
+                allArtworks = [];
+                if (galRows.length > 1) {
+                    const gHeaders = galRows[0].map(h => h.toLowerCase().replace(/[^a-z0-9]/g, ''));
+                    let noIdx = gHeaders.findIndex(h => h.includes('artworkno') || h.includes('no')) !== -1 ? gHeaders.findIndex(h => h.includes('artworkno') || h.includes('no')) : 0;
+                    let linkIdx = gHeaders.findIndex(h => h.includes('link') || h.includes('url')) !== -1 ? gHeaders.findIndex(h => h.includes('link') || h.includes('url')) : 1;
+
+                    for (let i = 1; i < galRows.length; i++) {
+                        let r = galRows[i];
+                        if (!r || r.length === 0) continue;
+                        let artNo = r[noIdx] ? r[noIdx].replace(/^["']|["']$/g, '').trim() : '';
+                        let artLink = r[linkIdx] ? r[linkIdx].replace(/^["']|["']$/g, '').trim() : '';
+
+                        if (artNo && artLink && (artLink.startsWith('http://') || artLink.startsWith('https://'))) {
+                            if (!allArtworks.some(a => a.no === artNo)) {
+                                allArtworks.push({ no: artNo, link: artLink });
+                            }
+                        }
+                    }
+                }
+
+                if (!document.getElementById('gallerySection').classList.contains('hidden')) {
+                    renderArtworks();
+                }
+
+            } catch (err) {
+                console.error("Error loading gallery or status data", err);
             }
         }
 
@@ -215,10 +426,9 @@
             const currentSelected = select.value;
             select.innerHTML = '<option value="" disabled selected>-- Choose your name --</option>';
 
-            // Sort A to Z alphabetically
-            studentNames.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'accent' }));
+            let sortedNames = Array.from(studentsDataMap.keys()).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'accent' }));
 
-            studentNames.forEach(name => {
+            sortedNames.forEach(name => {
                 let opt = document.createElement('option');
                 opt.value = name;
                 opt.textContent = name;
@@ -227,22 +437,55 @@
             });
         }
 
-        function onStudentSelected() {
-            const studentName = document.getElementById('studentSelect').value;
-            if (!studentName) return;
+        function switchToStudentSelect() {
+            document.getElementById('homeDashboard').classList.add('hidden');
+            document.getElementById('studentSelectionSection').classList.remove('hidden');
+        }
 
-            document.getElementById('greetingName').textContent = studentName;
+        function backToHome() {
+            document.getElementById('studentSelectionSection').classList.add('hidden');
+            document.getElementById('homeDashboard').classList.remove('hidden');
+        }
+
+        function onStudentSelected() {
+            const name = document.getElementById('studentSelect').value;
+            const student = studentsDataMap.get(name);
+            const proceedBtn = document.getElementById('proceedBtn');
+
+            if (!student) {
+                proceedBtn.disabled = true;
+                currentSelectedStudent = null;
+                return;
+            }
+
+            currentSelectedStudent = student;
+            proceedBtn.disabled = false;
+        }
+
+        function proceedToGallery() {
+            if (!currentSelectedStudent) return;
+
+            document.getElementById('studentSelectionSection').classList.add('hidden');
             document.getElementById('gallerySection').classList.remove('hidden');
             
-            // Reset selection when changing or starting
+            document.getElementById('galleryStudentName').textContent = currentSelectedStudent.name;
+            document.getElementById('galleryStudentClass').textContent = currentSelectedStudent.className;
+            
+            const photoImg = document.getElementById('galleryStudentPhoto');
+            if (currentSelectedStudent.photoUrl) {
+                photoImg.src = currentSelectedStudent.photoUrl;
+            } else {
+                photoImg.src = 'https://via.placeholder.com/150?text=Photo';
+            }
+
             selectedArtworks = [];
             updateUIState();
             renderArtworks();
         }
 
-        function changeStudent() {
-            document.getElementById('studentSelect').value = "";
+        function backToStudentSelect() {
             document.getElementById('gallerySection').classList.add('hidden');
+            document.getElementById('studentSelectionSection').classList.remove('hidden');
             selectedArtworks = [];
             updateUIState();
         }
@@ -266,7 +509,7 @@
                 let imgSrc = cleanImageUrl(art.link);
 
                 let card = document.createElement('div');
-                card.className = `artwork-card bg-white rounded-2xl p-3 border-2 transition-all cursor-pointer relative shadow-sm flex flex-col justify-between ${isSelected ? 'selected border-indigo-600 bg-indigo-50/50' : 'border-slate-200 hover:border-slate-300'}`;
+                card.className = `artwork-card bg-white rounded-2xl p-3 border-2 transition-all cursor-pointer relative shadow-sm flex flex-col justify-between ${isSelected ? 'selected border-indigo-600 bg-indigo-50/60 shadow-md' : 'border-slate-200 hover:border-slate-300'}`;
                 card.onclick = () => toggleArtworkSelection(art);
 
                 card.innerHTML = `
@@ -275,7 +518,7 @@
                         <button type="button" onclick="event.stopPropagation(); openImageModal('${imgSrc}', 'Artwork #${art.no}')" class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-sm transition">
                             <i class="fa-solid fa-expand"></i>
                         </button>
-                        ${isSelected ? '<div class="absolute inset-0 bg-indigo-600/20 backdrop-blur-[1px] flex items-center justify-center"><span class="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md"><i class="fa-solid fa-check mr-1"></i> Selected</span></div>' : ''}
+                        ${isSelected ? '<div class="absolute inset-0 bg-indigo-600/20 backdrop-blur-[1px] flex items-center justify-center"><span class="bg-indigo-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-md"><i class="fa-solid fa-check mr-1"></i> Selected</span></div>' : ''}
                     </div>
                     <div class="flex items-center justify-between px-1">
                         <span class="text-xs font-bold text-slate-700">Artwork #${art.no}</span>
@@ -288,9 +531,31 @@
             });
         }
 
+        function renderStatusList() {
+            const container = document.getElementById('statusListContainer');
+            if (studentSubmissionsMap.size === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">No submissions recorded yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            studentSubmissionsMap.forEach((artNos, studentName) => {
+                let formattedArts = artNos.length > 1 ? `Artwork ${artNos.join(' & ')}` : `Artwork ${artNos[0]}`;
+                
+                let item = document.createElement('div');
+                item.className = `flex flex-col sm:flex-row sm:items-center justify-between bg-slate-50 border border-slate-200 rounded-2xl px-3.5 py-3 text-xs gap-1`;
+                item.innerHTML = `
+                    <span class="font-bold text-slate-800"><i class="fa-solid fa-user-check text-indigo-500 mr-1.5"></i>${studentName}</span>
+                    <span class="bg-indigo-100 text-indigo-700 font-semibold px-2.5 py-1 rounded-xl text-right">${formattedArts}</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
         function cleanImageUrl(url) {
             if (!url) return '';
-            if (url.includes('drive.google.com')) {
+            url = url.replace(/^["']|["']$/g, '').trim();
+            if (url.includes('drive.google.com') || url.includes('docs.google.com')) {
                 let fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
                 if (fileIdMatch && fileIdMatch[1]) {
                     return `https://lh3.googleusercontent.com/d/${fileIdMatch[1]}=s800`;
@@ -336,9 +601,8 @@
         }
 
         async function submitSelections() {
-            const studentName = document.getElementById('studentSelect').value;
-            if (!studentName) {
-                alert("Please select your name from the dropdown first.");
+            if (!currentSelectedStudent) {
+                alert("Please select your name first.");
                 return;
             }
 
@@ -352,7 +616,7 @@
             submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Submitting...`;
 
             const payload = {
-                studentName: studentName,
+                studentName: currentSelectedStudent.name,
                 selections: selectedArtworks.map(a => ({ no: a.no, link: a.link }))
             };
 
@@ -366,12 +630,20 @@
                     body: JSON.stringify(payload)
                 });
 
-                selectedArtworks.forEach(a => claimedArtworkNos.add(a.no));
-                showSuccessScreen(studentName);
+                let sName = currentSelectedStudent.name;
+                if (!studentSubmissionsMap.has(sName)) {
+                    studentSubmissionsMap.set(sName, []);
+                }
+                selectedArtworks.forEach(a => {
+                    claimedArtworkNos.add(a.no);
+                    studentSubmissionsMap.get(sName).push(a.no);
+                });
+
+                showSuccessScreen(sName);
+                renderStatusList();
 
                 selectedArtworks = [];
                 updateUIState();
-                renderArtworks();
 
             } catch (error) {
                 console.error(error);
@@ -384,18 +656,26 @@
         function showSuccessScreen(name) {
             const main = document.querySelector('main');
             main.innerHTML = `
-                <div class="bg-white rounded-2xl p-8 text-center shadow-sm border border-slate-100 my-10 space-y-4">
+                <div class="bg-white rounded-3xl p-8 text-center shadow-sm border border-slate-100 my-10 space-y-4">
                     <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner">
                         <i class="fa-solid fa-check"></i>
                     </div>
                     <h2 class="text-xl font-bold text-slate-800">Successfully Submitted!</h2>
-                    <p class="text-sm text-slate-600">Thank you, <span class="font-semibold text-slate-800">${name}</span>. Your 2 artwork choices have been securely saved to the Google Sheet.</p>
-                    <button onclick="location.reload()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl text-sm shadow-md transition mt-4">
-                        Make Another Submission
+                    <p class="text-xs text-slate-600 leading-relaxed">Thank you, <span class="font-semibold text-slate-800">${name}</span>. Your 2 artwork choices have been securely saved.</p>
+                    <button onclick="location.reload()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-2xl text-xs shadow-lg shadow-indigo-500/25 transition mt-4">
+                        Make Another Selection
                     </button>
                 </div>
             `;
             document.getElementById('bottomBar').classList.add('translate-y-full');
+        }
+
+        function openStatusModal() {
+            document.getElementById('statusModal').classList.remove('hidden');
+        }
+
+        function closeStatusModal() {
+            document.getElementById('statusModal').classList.add('hidden');
         }
 
         function openImageModal(imgSrc, caption) {
