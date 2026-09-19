@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Student Artwork Selection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            padding-bottom: 120px;
+        }
+        .artwork-card.selected {
+            border-color: #4f46e5;
+            background-color: #e0e7ff;
+            transform: scale(0.98);
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <!-- Top Header -->
+    <header class="bg-indigo-600 text-white shadow-md sticky top-0 z-30 px-4 py-3 flex justify-between items-center">
+        <div>
+            <h1 class="text-lg font-bold tracking-tight"><i class="fa-solid fa-palette mr-2"></i>Art Selection</h1>
+            <p class="text-xs text-indigo-200">Choose exactly 2 artworks</p>
+        </div>
+        <button id="refreshBtn" onclick="loadData()" class="bg-indigo-700 hover:bg-indigo-800 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center shadow-sm">
+            <i class="fa-solid fa-rotate mr-1.5"></i> Refresh
+        </button>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-md mx-auto p-4 space-y-4">
+
+        <!-- Step 1: Student Selection Card (First Screen Focus) -->
+        <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+            <label for="studentSelect" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                <i class="fa-solid fa-user-graduate mr-1 text-indigo-500"></i> Select Your Name (A-Z)
+            </label>
+            <div class="relative">
+                <select id="studentSelect" onchange="onStudentSelected()" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl px-3.5 py-3 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-medium">
+                    <option value="" disabled selected>-- Choose your name --</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section (Hidden initially until student name is chosen) -->
+        <div id="gallerySection" class="hidden space-y-4 transition-all duration-300">
+            
+            <!-- Student Greeting Banner -->
+            <div class="bg-indigo-50 border border-indigo-100 text-indigo-800 px-4 py-2.5 rounded-xl text-xs flex items-center justify-between">
+                <span>Welcome, <strong id="greetingName" class="font-bold"></strong>!</span>
+                <button onclick="changeStudent()" class="text-indigo-600 underline text-[11px] font-semibold hover:text-indigo-800">Change Name</button>
+            </div>
+
+            <!-- Artwork Gallery Header -->
+            <div class="flex justify-between items-center px-1 pt-2">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500">
+                    <i class="fa-solid fa-images mr-1 text-indigo-500"></i> Available Artworks
+                </h2>
+                <span id="selectionCounter" class="text-xs font-semibold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full">
+                    0 / 2 Selected
+                </span>
+            </div>
+
+            <!-- Artwork Grid -->
+            <div id="artworkGrid" class="grid grid-cols-2 gap-3">
+                <!-- Dynamically populated artwork cards will appear here -->
+            </div>
+
+            <!-- Empty state message -->
+            <div id="emptyGallery" class="hidden text-center py-10 bg-white rounded-2xl border border-dashed border-slate-300 p-6">
+                <i class="fa-solid fa-box-open text-slate-300 text-4xl mb-2"></i>
+                <p class="text-sm font-semibold text-slate-600">No artworks available</p>
+                <p class="text-xs text-slate-400 mt-1">All artworks have been claimed.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Sticky Bottom Action Bar -->
+    <div id="bottomBar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-lg z-40 transition-transform transform translate-y-full">
+        <div class="max-w-md mx-auto flex items-center justify-between gap-3">
+            <div>
+                <p class="text-xs text-slate-500 font-medium">Your Selection:</p>
+                <p id="selectedSummary" class="text-sm font-bold text-indigo-600">None chosen</p>
+            </div>
+            <button id="submitBtn" onclick="submitSelections()" disabled class="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold px-5 py-3 rounded-xl text-sm shadow-md transition flex items-center">
+                <span>Submit Choices</span>
+                <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="imageModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeImageModal()">
+        <div class="relative max-w-full max-h-full flex flex-col items-center" onclick="event.stopPropagation()">
+            <button onclick="closeImageModal()" class="absolute -top-12 right-0 text-white bg-white/20 hover:bg-white/30 rounded-full w-9 h-9 flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <img id="modalImg" src="" alt="Full Artwork Preview" class="max-h-[80vh] max-w-full rounded-xl object-contain shadow-2xl border border-white/10">
+            <p id="modalCaption" class="text-white text-sm font-semibold mt-3 text-center"></p>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoptCqW99E3V3uVns4omqu8Cd77Y4aBTXG0PcVJsSDSKWfjmPLs4yB62-iIwcJVSkOykM9cCREfmpk/pub?gid=0&single=true&output=csv';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDUtB4o0SuybD1c7enXqp5U4CT0_JqyMh-AS0eJG8bGPSiilzfVl7zLKh_VKPEQw3v/exec';
+
+        let allArtworks = [];
+        let claimedArtworkNos = new Set();
+        let studentNames = [];
+        let selectedArtworks = []; // Array of {no, link}
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadData();
+        });
+
+        function parseCSV(text) {
+            let lines = text.split('\n');
+            let result = [];
+            for (let i = 0; i < lines.length; i++) {
+                let currentLine = lines[i].trim();
+                if (!currentLine) continue;
+                
+                let row = [];
+                let inQuotes = false;
+                let entry = '';
+                for (let charIdx = 0; charIdx < currentLine.length; charIdx++) {
+                    let char = currentLine[charIdx];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        row.push(entry.trim());
+                        entry = '';
+                    } else {
+                        entry += char;
+                    }
+                }
+                row.push(entry.trim());
+                result.push(row);
+            }
+            return result;
+        }
+
+        async function loadData() {
+            try {
+                const response = await fetch(CSV_URL + '&cacheBuster=' + new Date().getTime());
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+
+                if (rows.length < 2) return;
+
+                const headers = rows[0].map(h => h.toLowerCase().replace(/[^a-z0-9]/g, ''));
+                
+                let nameIdx = headers.findIndex(h => h.includes('student') || h.includes('name'));
+                let noIdx = headers.findIndex(h => h.includes('artworkno') || h.includes('no'));
+                let linkIdx = headers.findIndex(h => h.includes('link') || h.includes('url'));
+
+                if (nameIdx === -1) nameIdx = 0;
+                if (noIdx === -1) noIdx = 1;
+                if (linkIdx === -1) linkIdx = 2;
+
+                studentNames = [];
+                allArtworks = [];
+                claimedArtworkNos.clear();
+
+                for (let i = 1; i < rows.length; i++) {
+                    let r = rows[i];
+                    if (!r || r.length === 0) continue;
+
+                    let student = r[nameIdx] ? r[nameIdx].replace(/^["']|["']$/g, '').trim() : '';
+                    let artNo = r[noIdx] ? r[noIdx].replace(/^["']|["']$/g, '').trim() : '';
+                    let artLink = r[linkIdx] ? r[linkIdx].replace(/^["']|["']$/g, '').trim() : '';
+
+                    if (student && !studentNames.includes(student)) {
+                        studentNames.push(student);
+                    }
+
+                    if (artNo && artLink) {
+                        allArtworks.push({
+                            no: artNo,
+                            link: artLink
+                        });
+                    }
+                }
+
+                populateStudentDropdown();
+            } catch (err) {
+                console.error("Failed to load data", err);
+            }
+        }
+
+        function populateStudentDropdown() {
+            const select = document.getElementById('studentSelect');
+            const currentSelected = select.value;
+            select.innerHTML = '<option value="" disabled selected>-- Choose your name --</option>';
+
+            // Sort A to Z alphabetically
+            studentNames.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'accent' }));
+
+            studentNames.forEach(name => {
+                let opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                if (name === currentSelected) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        function onStudentSelected() {
+            const studentName = document.getElementById('studentSelect').value;
+            if (!studentName) return;
+
+            document.getElementById('greetingName').textContent = studentName;
+            document.getElementById('gallerySection').classList.remove('hidden');
+            
+            // Reset selection when changing or starting
+            selectedArtworks = [];
+            updateUIState();
+            renderArtworks();
+        }
+
+        function changeStudent() {
+            document.getElementById('studentSelect').value = "";
+            document.getElementById('gallerySection').classList.add('hidden');
+            selectedArtworks = [];
+            updateUIState();
+        }
+
+        function renderArtworks() {
+            const grid = document.getElementById('artworkGrid');
+            const emptyDiv = document.getElementById('emptyGallery');
+            grid.innerHTML = '';
+
+            const availableArtworks = allArtworks.filter(art => art.no && art.link && !claimedArtworkNos.has(art.no));
+
+            if (availableArtworks.length === 0) {
+                emptyDiv.classList.remove('hidden');
+                return;
+            } else {
+                emptyDiv.classList.add('hidden');
+            }
+
+            availableArtworks.forEach(art => {
+                const isSelected = selectedArtworks.some(item => item.no === art.no);
+                let imgSrc = cleanImageUrl(art.link);
+
+                let card = document.createElement('div');
+                card.className = `artwork-card bg-white rounded-2xl p-3 border-2 transition-all cursor-pointer relative shadow-sm flex flex-col justify-between ${isSelected ? 'selected border-indigo-600 bg-indigo-50/50' : 'border-slate-200 hover:border-slate-300'}`;
+                card.onclick = () => toggleArtworkSelection(art);
+
+                card.innerHTML = `
+                    <div class="relative w-full pt-[100%] rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+                        <img src="${imgSrc}" alt="Artwork ${art.no}" class="absolute inset-0 w-full h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=Artwork+${art.no}';">
+                        <button type="button" onclick="event.stopPropagation(); openImageModal('${imgSrc}', 'Artwork #${art.no}')" class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-sm transition">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
+                        ${isSelected ? '<div class="absolute inset-0 bg-indigo-600/20 backdrop-blur-[1px] flex items-center justify-center"><span class="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md"><i class="fa-solid fa-check mr-1"></i> Selected</span></div>' : ''}
+                    </div>
+                    <div class="flex items-center justify-between px-1">
+                        <span class="text-xs font-bold text-slate-700">Artwork #${art.no}</span>
+                        <div class="w-5 h-5 rounded-full border-2 ${isSelected ? 'bg-indigo-600 border-indigo-600 text-white flex items-center justify-center text-[10px]' : 'border-slate-300'}">
+                            ${isSelected ? '<i class="fa-solid fa-check"></i>' : ''}
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function cleanImageUrl(url) {
+            if (!url) return '';
+            if (url.includes('drive.google.com')) {
+                let fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+                if (fileIdMatch && fileIdMatch[1]) {
+                    return `https://lh3.googleusercontent.com/d/${fileIdMatch[1]}=s800`;
+                }
+            }
+            return url;
+        }
+
+        function toggleArtworkSelection(art) {
+            const index = selectedArtworks.findIndex(item => item.no === art.no);
+
+            if (index > -1) {
+                selectedArtworks.splice(index, 1);
+            } else {
+                if (selectedArtworks.length >= 2) {
+                    alert("You can only select a maximum of 2 artworks.");
+                    return;
+                }
+                selectedArtworks.push(art);
+            }
+
+            updateUIState();
+            renderArtworks();
+        }
+
+        function updateUIState() {
+            const count = selectedArtworks.length;
+            document.getElementById('selectionCounter').textContent = `${count} / 2 Selected`;
+
+            const bottomBar = document.getElementById('bottomBar');
+            const summary = document.getElementById('selectedSummary');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (count > 0) {
+                bottomBar.classList.remove('translate-y-full');
+                summary.textContent = selectedArtworks.map(a => `No. ${a.no}`).join(', ');
+            } else {
+                bottomBar.classList.add('translate-y-full');
+                summary.textContent = 'None chosen';
+            }
+
+            submitBtn.disabled = count !== 2;
+        }
+
+        async function submitSelections() {
+            const studentName = document.getElementById('studentSelect').value;
+            if (!studentName) {
+                alert("Please select your name from the dropdown first.");
+                return;
+            }
+
+            if (selectedArtworks.length !== 2) {
+                alert("Please select exactly 2 artworks before submitting.");
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Submitting...`;
+
+            const payload = {
+                studentName: studentName,
+                selections: selectedArtworks.map(a => ({ no: a.no, link: a.link }))
+            };
+
+            try {
+                await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                selectedArtworks.forEach(a => claimedArtworkNos.add(a.no));
+                showSuccessScreen(studentName);
+
+                selectedArtworks = [];
+                updateUIState();
+                renderArtworks();
+
+            } catch (error) {
+                console.error(error);
+                alert("Submission failed. Please check your internet connection and try again.");
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span>Submit Choices</span><i class="fa-solid fa-arrow-right ml-2"></i>`;
+            }
+        }
+
+        function showSuccessScreen(name) {
+            const main = document.querySelector('main');
+            main.innerHTML = `
+                <div class="bg-white rounded-2xl p-8 text-center shadow-sm border border-slate-100 my-10 space-y-4">
+                    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-800">Successfully Submitted!</h2>
+                    <p class="text-sm text-slate-600">Thank you, <span class="font-semibold text-slate-800">${name}</span>. Your 2 artwork choices have been securely saved to the Google Sheet.</p>
+                    <button onclick="location.reload()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl text-sm shadow-md transition mt-4">
+                        Make Another Submission
+                    </button>
+                </div>
+            `;
+            document.getElementById('bottomBar').classList.add('translate-y-full');
+        }
+
+        function openImageModal(imgSrc, caption) {
+            document.getElementById('modalImg').src = imgSrc;
+            document.getElementById('modalCaption').textContent = caption;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
