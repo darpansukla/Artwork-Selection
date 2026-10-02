@@ -82,15 +82,15 @@
 
                 <!-- Two Action Cards Grid -->
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- Student Select Card -->
+                    <!-- Choose your Exhibition Artwork Card -->
                     <div onclick="switchToStudentSelect()" class="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-md transition cursor-pointer group">
                         <div class="space-y-3">
                             <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shadow-inner group-hover:scale-105 transition">
                                 <i class="fa-solid fa-graduation-cap"></i>
                             </div>
                             <div>
-                                <h3 class="text-sm font-bold text-slate-900">Student Select</h3>
-                                <p class="text-[11px] text-slate-500 mt-1 leading-snug">Choose your name and proceed to the art gallery.</p>
+                                <h3 class="text-sm font-bold text-slate-900">Choose your Exhibition Artwork</h3>
+                                <p class="text-[11px] text-slate-500 mt-1 leading-snug">Select your name and find your master pieces.</p>
                             </div>
                         </div>
                         <div class="flex justify-end">
@@ -100,15 +100,15 @@
                         </div>
                     </div>
 
-                    <!-- Status Check Card -->
+                    <!-- Your Classmate already choose Artwork Card -->
                     <div onclick="openStatusModal()" class="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-md transition cursor-pointer group">
                         <div class="space-y-3">
                             <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-inner group-hover:scale-105 transition">
                                 <i class="fa-solid fa-clipboard-check"></i>
                             </div>
                             <div>
-                                <h3 class="text-sm font-bold text-slate-900">Status Check</h3>
-                                <p class="text-[11px] text-slate-500 mt-1 leading-snug">Check your submission status anytime.</p>
+                                <h3 class="text-sm font-bold text-slate-900">Your Classmate already choose Artwork</h3>
+                                <p class="text-[11px] text-slate-500 mt-1 leading-snug">See what choices your peers have locked in.</p>
                             </div>
                         </div>
                         <div class="flex justify-end">
@@ -123,7 +123,7 @@
             <!-- STUDENT SELECTION VIEW (Hidden by default) -->
             <section id="studentSelectionSection" class="hidden bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-5">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <button onclick="backToHome()" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center">
+                    <button type="button" onclick="backToHome()" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center">
                         <i class="fa-solid fa-arrow-left mr-1.5"></i> Back to Home
                     </button>
                     <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Step 1 of 2</span>
@@ -143,58 +143,73 @@
                     </div>
                 </div>
 
-                <button id="proceedBtn" onclick="proceedToGallery()" disabled class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-2xl text-sm shadow-lg shadow-indigo-500/25 transition flex items-center justify-center">
-                    <span>Proceed to Art Gallery</span>
+                <button type="button" id="proceedBtn" onclick="proceedToCategories()" disabled class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-2xl text-sm shadow-lg shadow-indigo-500/25 transition flex items-center justify-center">
+                    <span>Proceed to Categories</span>
                     <i class="fa-solid fa-arrow-right ml-2"></i>
                 </button>
             </section>
 
-            <!-- ARTWORK GALLERY SECTION (Hidden initially) -->
-            <div id="gallerySection" class="hidden space-y-4 transition-all duration-300">
-                
-                <!-- Enhanced Student Header Banner with Photo, Verified Badge & Class -->
+            <!-- CATEGORY ICONS SELECTION VIEW (Hidden initially) -->
+            <div id="categoryIconsSection" class="hidden space-y-4 transition-all duration-300">
+                <!-- Enhanced Student Header Banner -->
                 <div class="bg-gradient-to-r from-indigo-50/90 via-white to-indigo-50/50 border border-indigo-100/80 text-indigo-900 p-4 rounded-3xl flex items-center justify-between shadow-sm backdrop-blur-sm">
                     <div class="flex items-center space-x-3.5">
                         <div class="relative flex-shrink-0">
                             <div class="w-12 h-12 rounded-full bg-white overflow-hidden border-2 border-indigo-600 shadow-sm">
-                                <img id="galleryStudentPhoto" src="" alt="Photo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=Photo';">
+                                <img id="catStudentPhoto" src="" alt="Photo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=Photo';">
                             </div>
-                            <!-- Verified Check Badge Overlay -->
                             <div class="absolute -bottom-0.5 -right-0.5 bg-emerald-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm" title="Verified Student">
                                 <i class="fa-solid fa-check text-[7px]"></i>
                             </div>
                         </div>
                         <div>
-                            <div class="flex items-center space-x-1.5">
-                                <span class="text-[10px] uppercase tracking-wider font-extrabold text-indigo-600">Verified Student</span>
-                            </div>
-                            <h3 id="galleryStudentName" class="text-xs font-black text-slate-900 tracking-tight mt-0.5"></h3>
-                            <p class="text-[11px] text-slate-600 font-medium mt-0.5">Class: <span id="galleryStudentClass" class="font-bold text-indigo-700">-</span></p>
+                            <span class="text-[10px] uppercase tracking-wider font-extrabold text-indigo-600">Verified Student</span>
+                            <h3 id="catStudentName" class="text-xs font-black text-slate-900 tracking-tight mt-0.5"></h3>
+                            <p class="text-[11px] text-slate-600 font-medium mt-0.5">Class: <span id="catStudentClass" class="font-bold text-indigo-700">-</span></p>
                         </div>
                     </div>
-                    <button onclick="backToStudentSelect()" class="text-indigo-600 bg-white border border-indigo-200 px-3 py-1.5 rounded-xl text-[11px] font-semibold hover:bg-indigo-50 transition shadow-sm flex-shrink-0">Change</button>
+                    <button type="button" onclick="backToStudentSelect()" class="text-indigo-600 bg-white border border-indigo-200 px-3 py-1.5 rounded-xl text-[11px] font-semibold hover:bg-indigo-50 transition shadow-sm flex-shrink-0">Change</button>
                 </div>
 
-                <!-- Artwork Gallery Header -->
                 <div class="flex justify-between items-center px-1 pt-1">
                     <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center">
-                        <i class="fa-solid fa-images mr-1.5 text-indigo-500"></i> Available Artworks
+                        <i class="fa-solid fa-icons mr-1.5 text-indigo-500"></i> Sheet Categories
                     </h2>
-                    <span id="selectionCounter" class="text-xs font-semibold bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">
+                    <span id="catSelectionCounter" class="text-xs font-semibold bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">
                         0 / 2 Selected
                     </span>
                 </div>
 
-                <!-- Artwork Grid -->
-                <div id="artworkGrid" class="grid grid-cols-2 gap-3.5">
+                <!-- Category Icons Grid -->
+                <div id="categoryIconsGrid" class="grid grid-cols-2 gap-3.5">
+                    <!-- Dynamically populated from sheet data -->
+                </div>
+            </div>
+
+            <!-- SPECIFIC CATEGORY GALLERY VIEW (Hidden initially) -->
+            <div id="categoryGallerySection" class="hidden space-y-4 transition-all duration-300">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <button type="button" onclick="backToCategoryIcons()" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center bg-indigo-50 px-3 py-1.5 rounded-xl transition">
+                        <i class="fa-solid fa-arrow-left mr-1.5"></i> Back to Categories
+                    </button>
+                    <span id="activeCategoryTitle" class="text-xs font-black uppercase tracking-wider text-slate-800">Category Name</span>
+                </div>
+
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-[11px] text-slate-500 font-medium">Click image to like/select or preview.</span>
+                    <span id="gallerySelectionCounter" class="text-xs font-semibold bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">
+                        0 / 2 Selected
+                    </span>
+                </div>
+
+                <!-- Artworks Grid for Selected Category -->
+                <div id="specificCategoryArtworksGrid" class="grid grid-cols-2 gap-3.5">
                     <!-- Dynamically populated artwork cards -->
                 </div>
 
-                <!-- Empty state message -->
-                <div id="emptyGallery" class="hidden text-center py-10 bg-white rounded-3xl border border-dashed border-slate-300 p-6">
+                <div id="emptySpecificGallery" class="hidden text-center py-10 bg-white rounded-3xl border border-dashed border-slate-300 p-6">
                     <i class="fa-solid fa-box-open text-slate-300 text-4xl mb-2"></i>
-                    <p class="text-sm font-semibold text-slate-600">No artworks available</p>
-                    <p class="text-xs text-slate-400 mt-1">All artworks have been claimed.</p>
+                    <p class="text-sm font-semibold text-slate-600">No artworks available in this category</p>
                 </div>
             </div>
 
@@ -220,7 +235,7 @@
                 <p class="text-[11px] text-slate-400 font-medium">Your Selection:</p>
                 <p id="selectedSummary" class="text-xs font-bold text-indigo-600">None chosen</p>
             </div>
-            <button id="submitBtn" onclick="submitSelections()" disabled class="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold px-5 py-3 rounded-2xl text-xs shadow-lg shadow-indigo-500/25 transition flex items-center">
+            <button type="button" id="submitBtn" onclick="submitSelections()" disabled class="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold px-5 py-3 rounded-2xl text-xs shadow-lg shadow-indigo-500/25 transition flex items-center">
                 <span>Submit Choices</span>
                 <i class="fa-solid fa-arrow-right ml-2"></i>
             </button>
@@ -232,16 +247,16 @@
         <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <h3 class="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center">
-                    <i class="fa-solid fa-list-check mr-2 text-indigo-500"></i> Selection Status
+                    <i class="fa-solid fa-list-check mr-2 text-indigo-500"></i> Classmate Artwork Selections
                 </h3>
-                <button onclick="closeStatusModal()" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 transition">
+                <button type="button" onclick="closeStatusModal()" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 transition">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
             <div id="statusListContainer" class="space-y-2.5 overflow-y-auto pr-1 flex-1 max-h-[60vh]">
                 <p class="text-xs text-slate-400 italic text-center py-4">Loading status records...</p>
             </div>
-            <button onclick="closeStatusModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-2xl text-xs transition">
+            <button type="button" onclick="closeStatusModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-2xl text-xs transition">
                 Close
             </button>
         </div>
@@ -250,7 +265,7 @@
     <!-- Image Preview Modal -->
     <div id="imageModal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md" onclick="closeImageModal()">
         <div class="relative max-w-full max-h-full flex flex-col items-center" onclick="event.stopPropagation()">
-            <button onclick="closeImageModal()" class="absolute -top-12 right-0 text-white bg-white/20 hover:bg-white/30 rounded-full w-9 h-9 flex items-center justify-center transition">
+            <button type="button" onclick="closeImageModal()" class="absolute -top-12 right-0 text-white bg-white/20 hover:bg-white/30 rounded-full w-9 h-9 flex items-center justify-center transition">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
             <img id="modalImg" src="" alt="Full Artwork Preview" class="max-h-[80vh] max-w-full rounded-2xl object-contain shadow-2xl border border-white/10">
@@ -269,9 +284,10 @@
         let allArtworks = [];
         let claimedArtworkNos = new Set();
         let studentSubmissionsMap = new Map();
-        let artworkLinkMap = new Map(); // Maps artwork number to its image link
+        let artworkLinkMap = new Map();
         let selectedArtworks = [];
         let currentSelectedStudent = null;
+        let currentActiveCategory = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             loadAllData();
@@ -305,10 +321,14 @@
         }
 
         async function loadAllData() {
-            await Promise.all([
-                loadRegistrationData(),
-                loadStatusAndGalleryData()
-            ]);
+            try {
+                await Promise.all([
+                    loadRegistrationData(),
+                    loadStatusAndGalleryData()
+                ]);
+            } catch (e) {
+                console.error("Data loading warning:", e);
+            }
         }
 
         async function loadRegistrationData() {
@@ -357,7 +377,6 @@
 
         async function loadStatusAndGalleryData() {
             try {
-                // First load Gallery Data so we have the artwork links mapped before parsing status records
                 const galRes = await fetch(GALLERY_CSV_URL + '&cacheBuster=' + new Date().getTime());
                 const galText = await galRes.text();
                 const galRows = parseCSV(galText);
@@ -369,24 +388,31 @@
                     const gHeaders = galRows[0].map(h => h.toLowerCase().replace(/[^a-z0-9]/g, ''));
                     let noIdx = gHeaders.findIndex(h => h.includes('artworkno') || h.includes('no')) !== -1 ? gHeaders.findIndex(h => h.includes('artworkno') || h.includes('no')) : 0;
                     let linkIdx = gHeaders.findIndex(h => h.includes('link') || h.includes('url')) !== -1 ? gHeaders.findIndex(h => h.includes('link') || h.includes('url')) : 1;
+                    let catIdx = gHeaders.findIndex(h => h.includes('category') || h.includes('cat')) !== -1 ? gHeaders.findIndex(h => h.includes('category') || h.includes('cat')) : 2;
 
                     for (let i = 1; i < galRows.length; i++) {
                         let r = galRows[i];
                         if (!r || r.length === 0) continue;
                         let artNo = r[noIdx] ? r[noIdx].replace(/^["']|["']$/g, '').trim() : '';
                         let artLink = r[linkIdx] ? r[linkIdx].replace(/^["']|["']$/g, '').trim() : '';
+                        let artCat = r[catIdx] ? r[catIdx].replace(/^["']|["']$/g, '').trim() : '';
 
-                        if (artNo && artLink && (artLink.startsWith('http://') || artLink.startsWith('https://'))) {
+                        if (artNo && artLink && artCat) {
                             let cleanedLink = cleanImageUrl(artLink);
-                            artworkLinkMap.set(artNo, cleanedLink);
-                            if (!allArtworks.some(a => a.no === artNo)) {
-                                allArtworks.push({ no: artNo, link: artLink });
+                            let cleanNo = artNo.toString().trim();
+                            
+                            artworkLinkMap.set(cleanNo, cleanedLink);
+                            if (!isNaN(cleanNo)) {
+                                artworkLinkMap.set(Number(cleanNo).toString(), cleanedLink);
+                            }
+                            
+                            if (!allArtworks.some(a => a.no === cleanNo)) {
+                                allArtworks.push({ no: cleanNo, link: cleanedLink, category: artCat });
                             }
                         }
                     }
                 }
 
-                // Now load Status Data
                 const statusRes = await fetch(STATUS_CSV_URL + '&cacheBuster=' + new Date().getTime());
                 const statusText = await statusRes.text();
                 const statusRows = parseCSV(statusText);
@@ -406,12 +432,16 @@
                         let artNo = r[sNoIdx] ? r[sNoIdx].replace(/^["']|["']$/g, '').trim() : '';
                         
                         if (artNo) {
-                            claimedArtworkNos.add(artNo);
+                            let cleanNo = artNo.toString().trim();
+                            claimedArtworkNos.add(cleanNo);
+                            if (!isNaN(cleanNo)) {
+                                claimedArtworkNos.add(Number(cleanNo).toString());
+                            }
                             if (student) {
                                 if (!studentSubmissionsMap.has(student)) {
                                     studentSubmissionsMap.set(student, []);
                                 }
-                                studentSubmissionsMap.get(student).push(artNo);
+                                studentSubmissionsMap.get(student).push(cleanNo);
                             }
                         }
                     }
@@ -419,8 +449,11 @@
 
                 renderStatusList();
 
-                if (!document.getElementById('gallerySection').classList.contains('hidden')) {
-                    renderArtworks();
+                if (!document.getElementById('categoryIconsSection').classList.contains('hidden')) {
+                    renderCategoryIcons();
+                }
+                if (!document.getElementById('categoryGallerySection').classList.contains('hidden') && currentActiveCategory) {
+                    renderArtworksForCategory(currentActiveCategory);
                 }
 
             } catch (err) {
@@ -469,16 +502,16 @@
             proceedBtn.disabled = false;
         }
 
-        function proceedToGallery() {
+        function proceedToCategories() {
             if (!currentSelectedStudent) return;
 
             document.getElementById('studentSelectionSection').classList.add('hidden');
-            document.getElementById('gallerySection').classList.remove('hidden');
+            document.getElementById('categoryIconsSection').classList.remove('hidden');
             
-            document.getElementById('galleryStudentName').textContent = currentSelectedStudent.name;
-            document.getElementById('galleryStudentClass').textContent = currentSelectedStudent.className;
+            document.getElementById('catStudentName').textContent = currentSelectedStudent.name;
+            document.getElementById('catStudentClass').textContent = currentSelectedStudent.className;
             
-            const photoImg = document.getElementById('galleryStudentPhoto');
+            const photoImg = document.getElementById('catStudentPhoto');
             if (currentSelectedStudent.photoUrl) {
                 photoImg.src = currentSelectedStudent.photoUrl;
             } else {
@@ -487,43 +520,112 @@
 
             selectedArtworks = [];
             updateUIState();
-            renderArtworks();
+            renderCategoryIcons();
         }
 
         function backToStudentSelect() {
-            document.getElementById('gallerySection').classList.add('hidden');
+            document.getElementById('categoryIconsSection').classList.add('hidden');
+            document.getElementById('categoryGallerySection').classList.add('hidden');
             document.getElementById('studentSelectionSection').classList.add('hidden');
             document.getElementById('homeDashboard').classList.remove('hidden');
             selectedArtworks = [];
             updateUIState();
         }
 
-        function renderArtworks() {
-            const grid = document.getElementById('artworkGrid');
-            const emptyDiv = document.getElementById('emptyGallery');
+        function renderCategoryIcons() {
+            const grid = document.getElementById('categoryIconsGrid');
             grid.innerHTML = '';
 
-            const availableArtworks = allArtworks.filter(art => art.no && art.link && !claimedArtworkNos.has(art.no));
+            let availableArtworks = allArtworks.filter(art => art.no && art.link && !claimedArtworkNos.has(art.no));
+            
+            let categoryMap = new Map();
+            availableArtworks.forEach(art => {
+                if (art.category) {
+                    if (!categoryMap.has(art.category)) {
+                        categoryMap.set(art.category, { count: 0, firstImage: art.link });
+                    }
+                    categoryMap.get(art.category).count++;
+                }
+            });
 
-            if (availableArtworks.length === 0) {
+            let sheetCategories = Array.from(categoryMap.keys()).sort((a, b) => a.localeCompare(b));
+
+            if (sheetCategories.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-xs text-slate-400 italic">No categories found in sheet data.</div>`;
+                return;
+            }
+
+            sheetCategories.forEach((categoryName) => {
+                let catData = categoryMap.get(categoryName);
+                let count = catData.count;
+                let firstImage = catData.firstImage;
+
+                let card = document.createElement('div');
+                card.className = `glass-card rounded-3xl p-4 flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md transition cursor-pointer group relative overflow-hidden`;
+                card.onclick = () => openCategoryGallery(categoryName);
+
+                card.innerHTML = `
+                    <!-- Hotstar-style Transparent Background Backdrop Preview -->
+                    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                        <img src="${firstImage}" alt="${categoryName}" class="w-full h-full object-cover opacity-15 blur-sm group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/40"></div>
+                    </div>
+
+                    <div class="relative z-10 flex items-start justify-between">
+                        <div class="w-12 h-12 rounded-2xl bg-white/80 border border-slate-200 shadow-sm overflow-hidden flex items-center justify-center group-hover:scale-105 transition">
+                            <img src="${firstImage}" alt="Thumbnail" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-full shadow-sm">${count} available</span>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition">${categoryName}</h3>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Explore ${categoryName.toLowerCase()} gallery</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openCategoryGallery(categoryName) {
+            currentActiveCategory = categoryName;
+            document.getElementById('categoryIconsSection').classList.add('hidden');
+            document.getElementById('categoryGallerySection').classList.remove('hidden');
+            document.getElementById('activeCategoryTitle').textContent = categoryName;
+            renderArtworksForCategory(categoryName);
+        }
+
+        function backToCategoryIcons() {
+            document.getElementById('categoryGallerySection').classList.add('hidden');
+            document.getElementById('categoryIconsSection').classList.remove('hidden');
+            renderCategoryIcons();
+        }
+
+        function renderArtworksForCategory(categoryName) {
+            const grid = document.getElementById('specificCategoryArtworksGrid');
+            const emptyDiv = document.getElementById('emptySpecificGallery');
+            grid.innerHTML = '';
+
+            let categoryArtworks = allArtworks.filter(art => art.no && art.link && !claimedArtworkNos.has(art.no) && art.category === categoryName);
+
+            if (categoryArtworks.length === 0) {
                 emptyDiv.classList.remove('hidden');
                 return;
             } else {
                 emptyDiv.classList.add('hidden');
             }
 
-            availableArtworks.forEach(art => {
+            categoryArtworks.forEach(art => {
                 const isSelected = selectedArtworks.some(item => item.no === art.no);
-                let imgSrc = cleanImageUrl(art.link);
+                let imgSrc = art.link;
 
                 let card = document.createElement('div');
                 card.className = `artwork-card bg-white rounded-2xl p-3 border-2 transition-all cursor-pointer relative shadow-sm flex flex-col justify-between ${isSelected ? 'selected border-indigo-600 bg-indigo-50/60 shadow-md' : 'border-slate-200 hover:border-slate-300'}`;
-                card.onclick = () => toggleArtworkSelection(art);
+                card.onclick = () => toggleArtworkSelection(art, categoryName);
 
                 card.innerHTML = `
                     <div class="relative w-full pt-[100%] rounded-xl overflow-hidden bg-slate-100 mb-2.5">
                         <img src="${imgSrc}" alt="Artwork ${art.no}" class="absolute inset-0 w-full h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=Artwork+${art.no}';">
-                        <button type="button" onclick="event.stopPropagation(); openImageModal('${imgSrc}', 'Artwork #${art.no}')" class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-sm transition">
+                        <button type="button" onclick="event.stopPropagation(); openImageModal('${imgSrc}', 'Artwork #${art.no} (${categoryName})')" class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-sm transition">
                             <i class="fa-solid fa-expand"></i>
                         </button>
                         ${isSelected ? '<div class="absolute inset-0 bg-indigo-600/20 backdrop-blur-[1px] flex items-center justify-center"><span class="bg-indigo-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-md"><i class="fa-solid fa-check mr-1"></i> Selected</span></div>' : ''}
@@ -562,12 +664,16 @@
 
                 let picturesHtml = `<div class="grid grid-cols-2 gap-2 mt-1">`;
                 artNos.forEach(artNo => {
-                    let imgLink = artworkLinkMap.get(artNo) || 'https://via.placeholder.com/150?text=Artwork+' + artNo;
+                    let cleanNo = artNo.toString().trim();
+                    let imgLink = artworkLinkMap.get(cleanNo) || 
+                                  (!isNaN(cleanNo) ? artworkLinkMap.get(Number(cleanNo).toString()) : null) || 
+                                  'https://via.placeholder.com/150?text=Artwork+' + cleanNo;
+
                     picturesHtml += `
-                        <div class="relative group bg-slate-200 rounded-xl overflow-hidden pt-[75%] border border-slate-200 shadow-sm cursor-pointer" onclick="openImageModal('${imgLink}', '${studentName} - Artwork #${artNo}')">
-                            <img src="${imgLink}" alt="Artwork ${artNo}" class="absolute inset-0 w-full h-full object-cover transition transform hover:scale-105" onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=Art+${artNo}';">
+                        <div class="relative group bg-slate-200 rounded-xl overflow-hidden pt-[75%] border border-slate-200 shadow-sm cursor-pointer" onclick="openImageModal('${imgLink}', '${studentName} - Artwork #${cleanNo}')">
+                            <img src="${imgLink}" alt="Artwork ${cleanNo}" class="absolute inset-0 w-full h-full object-cover transition transform hover:scale-105" onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=Art+${cleanNo}';">
                             <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent p-1.5 flex items-center justify-between">
-                                <span class="text-[10px] font-bold text-white drop-shadow">#${artNo}</span>
+                                <span class="text-[10px] font-bold text-white drop-shadow">#${cleanNo}</span>
                                 <span class="text-white text-[10px] bg-white/20 hover:bg-white/40 rounded-full w-5 h-5 flex items-center justify-center backdrop-blur-sm">
                                     <i class="fa-solid fa-expand text-[8px]"></i>
                                 </span>
@@ -594,7 +700,7 @@
             return url;
         }
 
-        function toggleArtworkSelection(art) {
+        function toggleArtworkSelection(art, categoryName) {
             const index = selectedArtworks.findIndex(item => item.no === art.no);
 
             if (index > -1) {
@@ -608,12 +714,13 @@
             }
 
             updateUIState();
-            renderArtworks();
+            renderArtworksForCategory(categoryName);
         }
 
         function updateUIState() {
             const count = selectedArtworks.length;
-            document.getElementById('selectionCounter').textContent = `${count} / 2 Selected`;
+            document.getElementById('catSelectionCounter').textContent = `${count} / 2 Selected`;
+            document.getElementById('gallerySelectionCounter').textContent = `${count} / 2 Selected`;
 
             const bottomBar = document.getElementById('bottomBar');
             const summary = document.getElementById('selectedSummary');
@@ -647,7 +754,7 @@
 
             const payload = {
                 studentName: currentSelectedStudent.name,
-                selections: selectedArtworks.map(a => ({ no: a.no, link: a.link }))
+                selections: selectedArtworks.map(a => ({ no: a.no, link: a.link, category: a.category }))
             };
 
             try {
@@ -692,7 +799,7 @@
                     </div>
                     <h2 class="text-xl font-bold text-slate-800">Successfully Submitted!</h2>
                     <p class="text-xs text-slate-600 leading-relaxed">Thank you, <span class="font-semibold text-slate-800">${name}</span>. Your 2 artwork choices have been securely saved.</p>
-                    <button onclick="location.reload()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-2xl text-xs shadow-lg shadow-indigo-500/25 transition mt-4">
+                    <button type="button" onclick="location.reload()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-2xl text-xs shadow-lg shadow-indigo-500/25 transition mt-4">
                         Make Another Selection
                     </button>
                 </div>
