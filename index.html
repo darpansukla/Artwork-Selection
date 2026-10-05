@@ -62,9 +62,8 @@
         <!-- Main Container -->
         <main class="max-w-md mx-auto px-5 space-y-5">
 
-            <!-- HOME DASHBOARD VIEW (Visible initially) -->
+            <!-- HOME DASHBOARD VIEW -->
             <div id="homeDashboard" class="space-y-6">
-                <!-- Hero Welcome Banner Card -->
                 <div class="relative bg-gradient-to-br from-indigo-50/80 via-white to-purple-50/50 rounded-3xl p-6 border border-slate-100 shadow-sm overflow-hidden">
                     <div class="absolute right-[-20px] bottom-[-20px] w-32 h-32 opacity-15 pointer-events-none">
                         <i class="fa-solid fa-paintbrush text-9xl text-indigo-600"></i>
@@ -80,9 +79,7 @@
                     </div>
                 </div>
 
-                <!-- Two Action Cards Grid -->
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- Choose your Exhibition Artwork Card -->
                     <div onclick="switchToStudentSelect()" class="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-md transition cursor-pointer group">
                         <div class="space-y-3">
                             <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shadow-inner group-hover:scale-105 transition">
@@ -100,7 +97,6 @@
                         </div>
                     </div>
 
-                    <!-- Your Classmate already choose Artwork Card -->
                     <div onclick="openStatusModal()" class="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-md transition cursor-pointer group">
                         <div class="space-y-3">
                             <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-inner group-hover:scale-105 transition">
@@ -120,7 +116,7 @@
                 </div>
             </div>
 
-            <!-- STUDENT SELECTION VIEW (Hidden by default) -->
+            <!-- STUDENT SELECTION VIEW -->
             <section id="studentSelectionSection" class="hidden bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-5">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                     <button type="button" onclick="backToHome()" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center">
@@ -129,17 +125,25 @@
                     <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Step 1 of 2</span>
                 </div>
 
-                <div>
-                    <label for="studentSelect" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                <div class="space-y-3 relative">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">
                         <i class="fa-solid fa-user-graduate mr-1 text-indigo-500"></i> Select Your Name (A-Z)
                     </label>
+
+                    <!-- SINGLE UNIFIED SEARCHABLE INPUT BOX -->
                     <div class="relative">
-                        <select id="studentSelect" onchange="onStudentSelected()" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-2xl px-4 py-3.5 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-medium">
-                            <option value="" disabled selected>-- Choose your name --</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                        </span>
+                        <input type="text" id="unifiedStudentInput" onfocus="showStudentDropdownList()" oninput="filterUnifiedStudentList()" placeholder="Type to search or select your name (A-Z)..." class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-2xl pl-9 pr-8 py-3.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-medium" autocomplete="off">
+                        <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-solid fa-chevron-down text-xs"></i>
-                        </div>
+                        </span>
+                    </div>
+
+                    <!-- DROPDOWN POPUP LIST -->
+                    <div id="unifiedDropdownList" class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl max-h-60 overflow-y-auto z-30 hidden p-1">
+                        <!-- Populated dynamically -->
                     </div>
                 </div>
 
@@ -149,9 +153,8 @@
                 </button>
             </section>
 
-            <!-- CATEGORY ICONS SELECTION VIEW (Hidden initially) -->
+            <!-- CATEGORY ICONS SELECTION VIEW -->
             <div id="categoryIconsSection" class="hidden space-y-4 transition-all duration-300">
-                <!-- Enhanced Student Header Banner -->
                 <div class="bg-gradient-to-r from-indigo-50/90 via-white to-indigo-50/50 border border-indigo-100/80 text-indigo-900 p-4 rounded-3xl flex items-center justify-between shadow-sm backdrop-blur-sm">
                     <div class="flex items-center space-x-3.5">
                         <div class="relative flex-shrink-0">
@@ -180,13 +183,10 @@
                     </span>
                 </div>
 
-                <!-- Category Icons Grid -->
-                <div id="categoryIconsGrid" class="grid grid-cols-2 gap-3.5">
-                    <!-- Dynamically populated from sheet data -->
-                </div>
+                <div id="categoryIconsGrid" class="grid grid-cols-2 gap-3.5"></div>
             </div>
 
-            <!-- SPECIFIC CATEGORY GALLERY VIEW (Hidden initially) -->
+            <!-- SPECIFIC CATEGORY GALLERY VIEW -->
             <div id="categoryGallerySection" class="hidden space-y-4 transition-all duration-300">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                     <button type="button" onclick="backToCategoryIcons()" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center bg-indigo-50 px-3 py-1.5 rounded-xl transition">
@@ -202,10 +202,7 @@
                     </span>
                 </div>
 
-                <!-- Artworks Grid for Selected Category -->
-                <div id="specificCategoryArtworksGrid" class="grid grid-cols-2 gap-3.5">
-                    <!-- Dynamically populated artwork cards -->
-                </div>
+                <div id="specificCategoryArtworksGrid" class="grid grid-cols-2 gap-3.5"></div>
 
                 <div id="emptySpecificGallery" class="hidden text-center py-10 bg-white rounded-3xl border border-dashed border-slate-300 p-6">
                     <i class="fa-solid fa-box-open text-slate-300 text-4xl mb-2"></i>
@@ -216,19 +213,19 @@
         </main>
     </div>
 
-    <!-- Professional Footer / Credit -->
+    <!-- Professional Footer -->
     <footer class="text-center py-8 px-4 text-xs text-slate-400 font-medium space-y-2 mt-auto">
         <div class="flex items-center justify-center space-x-2 text-slate-300">
             <span class="h-px w-12 bg-slate-200"></span>
             <i class="fa-solid fa-palette text-indigo-500 text-[10px]"></i>
             <span class="h-px w-12 bg-slate-200"></span>
         </div>
-        <p class="text-slate-500 font-semibold tracking-wide">Exhibition Artwork Selection System</p>
+        <p class="text-slate-500 font-semibold tracking-wide">Exhibition Artwork Selection System[cite: 1]</p>
         <p class="text-slate-600 font-bold">Designed & Developed by <span class="text-indigo-600">Darpan Sukla</span></p>
         <p class="text-[10px] text-slate-400 uppercase tracking-widest pt-1">Art Makes A Brighter Tomorrow</p>
     </footer>
 
-    <!-- Sticky Bottom Action Bar for Gallery Submission -->
+    <!-- Sticky Bottom Action Bar -->
     <div id="bottomBar" class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-4 shadow-2xl z-40 transition-transform transform translate-y-full">
         <div class="max-w-md mx-auto flex items-center justify-between gap-3">
             <div>
@@ -247,13 +244,22 @@
         <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <h3 class="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center">
-                    <i class="fa-solid fa-list-check mr-2 text-indigo-500"></i> Classmate Artwork Selections
+                    <i class="fa-solid fa-list-check mr-2 text-indigo-500"></i> Classmate Selections
                 </h3>
                 <button type="button" onclick="closeStatusModal()" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 transition">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
-            <div id="statusListContainer" class="space-y-2.5 overflow-y-auto pr-1 flex-1 max-h-[60vh]">
+            
+            <!-- Search Input for Classmate Selections -->
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                </span>
+                <input type="text" id="statusSearchInput" oninput="filterStatusList()" placeholder="Search by student name or artwork #..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl pl-9 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
+            </div>
+
+            <div id="statusListContainer" class="space-y-2.5 overflow-y-auto pr-1 flex-1 max-h-[50vh]">
                 <p class="text-xs text-slate-400 italic text-center py-4">Loading status records...</p>
             </div>
             <button type="button" onclick="closeStatusModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-2xl text-xs transition">
@@ -268,8 +274,16 @@
             <button type="button" onclick="closeImageModal()" class="absolute -top-12 right-0 text-white bg-white/20 hover:bg-white/30 rounded-full w-9 h-9 flex items-center justify-center transition">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-            <img id="modalImg" src="" alt="Full Artwork Preview" class="max-h-[80vh] max-w-full rounded-2xl object-contain shadow-2xl border border-white/10">
-            <p id="modalCaption" class="text-white text-xs font-semibold mt-3 text-center"></p>
+            <img id="modalImg" src="" alt="Full Artwork Preview" class="max-h-[70vh] max-w-full rounded-2xl object-contain shadow-2xl border border-white/10">
+            
+            <p id="modalStudentNameText" class="text-black font-normal uppercase text-sm mt-3 tracking-wider text-center bg-white px-4 py-1.5 rounded-lg border border-slate-300 shadow-md">-</p>
+            <p id="modalCaption" class="text-slate-300 text-xs font-semibold mt-1 text-center"></p>
+            
+            <!-- Download Button with Name Embedded -->
+            <button type="button" id="downloadBtn" onclick="downloadArtworkWithLabel()" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-2xl text-xs shadow-lg shadow-indigo-500/30 transition flex items-center space-x-2">
+                <i class="fa-solid fa-download"></i>
+                <span>Download Image with Name</span>
+            </button>
         </div>
     </div>
 
@@ -285,12 +299,22 @@
         let claimedArtworkNos = new Set();
         let studentSubmissionsMap = new Map();
         let artworkLinkMap = new Map();
+        let artworkOwnerMap = new Map();
         let selectedArtworks = [];
         let currentSelectedStudent = null;
         let currentActiveCategory = null;
+        let activeModalArtworkNo = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             loadAllData();
+            
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                const container = document.getElementById('unifiedStudentInput').parentElement.parentElement;
+                if (!container.contains(e.target)) {
+                    document.getElementById('unifiedDropdownList').classList.add('hidden');
+                }
+            });
         });
 
         function parseCSV(text) {
@@ -369,7 +393,7 @@
                     });
                 }
 
-                populateStudentDropdown();
+                populateUnifiedDropdown('');
             } catch (err) {
                 console.error("Error loading registration data", err);
             }
@@ -419,6 +443,7 @@
                 
                 claimedArtworkNos.clear();
                 studentSubmissionsMap.clear();
+                artworkOwnerMap.clear();
 
                 if (statusRows.length > 1) {
                     const sHeaders = statusRows[0].map(h => h.toLowerCase().replace(/[^a-z0-9]/g, ''));
@@ -438,6 +463,11 @@
                                 claimedArtworkNos.add(Number(cleanNo).toString());
                             }
                             if (student) {
+                                artworkOwnerMap.set(cleanNo, student);
+                                if (!isNaN(cleanNo)) {
+                                    artworkOwnerMap.set(Number(cleanNo).toString(), student);
+                                }
+
                                 if (!studentSubmissionsMap.has(student)) {
                                     studentSubmissionsMap.set(student, []);
                                 }
@@ -461,34 +491,52 @@
             }
         }
 
-        function populateStudentDropdown() {
-            const select = document.getElementById('studentSelect');
-            const currentSelected = select.value;
-            select.innerHTML = '<option value="" disabled selected>-- Choose your name --</option>';
+        function populateUnifiedDropdown(filterQuery = '') {
+            const listContainer = document.getElementById('unifiedDropdownList');
+            listContainer.innerHTML = '';
 
             let sortedNames = Array.from(studentsDataMap.keys()).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'accent' }));
+            let query = filterQuery.toLowerCase().trim();
 
+            let matchedCount = 0;
             sortedNames.forEach(name => {
-                let opt = document.createElement('option');
-                opt.value = name;
-                opt.textContent = name;
-                if (name === currentSelected) opt.selected = true;
-                select.appendChild(opt);
+                if (query && !name.toLowerCase().includes(query)) {
+                    return;
+                }
+                matchedCount++;
+                let item = document.createElement('div');
+                item.className = 'px-3.5 py-2.5 text-xs text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 rounded-xl cursor-pointer font-medium transition';
+                item.textContent = name;
+                item.onclick = () => selectStudentFromDropdown(name);
+                listContainer.appendChild(item);
             });
+
+            if (matchedCount === 0) {
+                let item = document.createElement('div');
+                item.className = 'px-3.5 py-2.5 text-xs text-slate-400 italic text-center';
+                item.textContent = 'No matching student found';
+                listContainer.appendChild(item);
+            }
         }
 
-        function switchToStudentSelect() {
-            document.getElementById('homeDashboard').classList.add('hidden');
-            document.getElementById('studentSelectionSection').classList.remove('hidden');
+        function showStudentDropdownList() {
+            document.getElementById('unifiedDropdownList').classList.remove('hidden');
+            populateUnifiedDropdown(document.getElementById('unifiedStudentInput').value);
         }
 
-        function backToHome() {
-            document.getElementById('studentSelectionSection').classList.add('hidden');
-            document.getElementById('homeDashboard').classList.remove('hidden');
+        function filterUnifiedStudentList() {
+            const query = document.getElementById('unifiedStudentInput').value;
+            document.getElementById('unifiedDropdownList').classList.remove('hidden');
+            populateUnifiedDropdown(query);
+
+            currentSelectedStudent = null;
+            document.getElementById('proceedBtn').disabled = true;
         }
 
-        function onStudentSelected() {
-            const name = document.getElementById('studentSelect').value;
+        function selectStudentFromDropdown(name) {
+            document.getElementById('unifiedStudentInput').value = name;
+            document.getElementById('unifiedDropdownList').classList.add('hidden');
+
             const student = studentsDataMap.get(name);
             const proceedBtn = document.getElementById('proceedBtn');
 
@@ -498,8 +546,30 @@
                 return;
             }
 
+            if (studentSubmissionsMap.has(name)) {
+                alert(`${name}, you have already submitted your artworks and cannot select again.`);
+                document.getElementById('unifiedStudentInput').value = "";
+                proceedBtn.disabled = true;
+                currentSelectedStudent = null;
+                return;
+            }
+
             currentSelectedStudent = student;
             proceedBtn.disabled = false;
+        }
+
+        function switchToStudentSelect() {
+            document.getElementById('homeDashboard').classList.add('hidden');
+            document.getElementById('studentSelectionSection').classList.remove('hidden');
+            document.getElementById('unifiedStudentInput').value = '';
+            currentSelectedStudent = null;
+            document.getElementById('proceedBtn').disabled = true;
+            populateUnifiedDropdown('');
+        }
+
+        function backToHome() {
+            document.getElementById('studentSelectionSection').classList.add('hidden');
+            document.getElementById('homeDashboard').classList.remove('hidden');
         }
 
         function proceedToCategories() {
@@ -565,7 +635,6 @@
                 card.onclick = () => openCategoryGallery(categoryName);
 
                 card.innerHTML = `
-                    <!-- Hotstar-style Transparent Background Backdrop Preview -->
                     <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                         <img src="${firstImage}" alt="${categoryName}" class="w-full h-full object-cover opacity-15 blur-sm group-hover:scale-110 transition duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/40"></div>
@@ -596,6 +665,7 @@
 
         function backToCategoryIcons() {
             document.getElementById('categoryGallerySection').classList.add('hidden');
+            document.getElementById('categoryIconsSection').classList.add('hidden');
             document.getElementById('categoryIconsSection').classList.remove('hidden');
             renderCategoryIcons();
         }
@@ -614,6 +684,8 @@
                 emptyDiv.classList.add('hidden');
             }
 
+            const studentNameLabel = currentSelectedStudent ? currentSelectedStudent.name : '';
+
             categoryArtworks.forEach(art => {
                 const isSelected = selectedArtworks.some(item => item.no === art.no);
                 let imgSrc = art.link;
@@ -625,10 +697,17 @@
                 card.innerHTML = `
                     <div class="relative w-full pt-[100%] rounded-xl overflow-hidden bg-slate-100 mb-2.5">
                         <img src="${imgSrc}" alt="Artwork ${art.no}" class="absolute inset-0 w-full h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=Artwork+${art.no}';">
-                        <button type="button" onclick="event.stopPropagation(); openImageModal('${imgSrc}', 'Artwork #${art.no} (${categoryName})')" class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-sm transition">
+                        <button type="button" onclick="event.stopPropagation(); openImageModal('${imgSrc}', 'Artwork #${art.no} (${categoryName})', '${art.no}')" class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-sm transition">
                             <i class="fa-solid fa-expand"></i>
                         </button>
-                        ${isSelected ? '<div class="absolute inset-0 bg-indigo-600/20 backdrop-blur-[1px] flex items-center justify-center"><span class="bg-indigo-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-md"><i class="fa-solid fa-check mr-1"></i> Selected</span></div>' : ''}
+                        ${isSelected ? `
+                            <div class="absolute inset-0 bg-indigo-600/30 backdrop-blur-[1px] flex flex-col items-center justify-center p-2 text-center">
+                                <span class="bg-indigo-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-md mb-1.5"><i class="fa-solid fa-check mr-1"></i> Selected</span>
+                                <div class="bg-white/95 text-slate-900 font-normal text-[10px] px-2 py-1 rounded-lg shadow-sm border border-indigo-200 w-full truncate">
+                                    <i class="fa-solid fa-user text-indigo-600 mr-1 text-[9px]"></i>${studentNameLabel}
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
                     <div class="flex items-center justify-between px-1">
                         <span class="text-xs font-bold text-slate-700">Artwork #${art.no}</span>
@@ -641,7 +720,7 @@
             });
         }
 
-        function renderStatusList() {
+        function renderStatusList(filterText = '') {
             const container = document.getElementById('statusListContainer');
             if (studentSubmissionsMap.size === 0) {
                 container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">No submissions recorded yet.</p>`;
@@ -649,13 +728,26 @@
             }
 
             container.innerHTML = '';
+            let query = filterText.toLowerCase().trim();
+            let hasMatch = false;
+
             studentSubmissionsMap.forEach((artNos, studentName) => {
+                let studentMatches = studentName.toLowerCase().includes(query);
+                let matchingArtNos = artNos.filter(artNo => artNo.toString().toLowerCase().includes(query));
+                
+                if (query && !studentMatches && matchingArtNos.length === 0) {
+                    return;
+                }
+
+                hasMatch = true;
+                let displayArtNos = (query && !studentMatches && matchingArtNos.length > 0) ? matchingArtNos : artNos;
+
                 let item = document.createElement('div');
                 item.className = `flex flex-col bg-slate-50 border border-slate-200 rounded-2xl p-3.5 gap-2.5`;
                 
                 let studentHeader = `
                     <div class="flex items-center justify-between">
-                        <span class="font-bold text-slate-800 text-xs flex items-center">
+                        <span class="font-normal text-slate-800 text-xs flex items-center">
                             <i class="fa-solid fa-user-check text-indigo-500 mr-1.5"></i>${studentName}
                         </span>
                         <span class="text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md">Verified</span>
@@ -663,17 +755,17 @@
                 `;
 
                 let picturesHtml = `<div class="grid grid-cols-2 gap-2 mt-1">`;
-                artNos.forEach(artNo => {
+                displayArtNos.forEach(artNo => {
                     let cleanNo = artNo.toString().trim();
                     let imgLink = artworkLinkMap.get(cleanNo) || 
                                   (!isNaN(cleanNo) ? artworkLinkMap.get(Number(cleanNo).toString()) : null) || 
                                   'https://via.placeholder.com/150?text=Artwork+' + cleanNo;
 
                     picturesHtml += `
-                        <div class="relative group bg-slate-200 rounded-xl overflow-hidden pt-[75%] border border-slate-200 shadow-sm cursor-pointer" onclick="openImageModal('${imgLink}', '${studentName} - Artwork #${cleanNo}')">
+                        <div class="relative group bg-slate-200 rounded-xl overflow-hidden pt-[75%] border border-slate-200 shadow-sm cursor-pointer" onclick="openImageModal('${imgLink}', '${studentName} - Artwork #${cleanNo}', '${cleanNo}')">
                             <img src="${imgLink}" alt="Artwork ${cleanNo}" class="absolute inset-0 w-full h-full object-cover transition transform hover:scale-105" onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=Art+${cleanNo}';">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent p-1.5 flex items-center justify-between">
-                                <span class="text-[10px] font-bold text-white drop-shadow">#${cleanNo}</span>
+                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-1.5 flex items-center justify-between">
+                                <span class="text-[10px] font-normal text-white drop-shadow">#${cleanNo} (${studentName})</span>
                                 <span class="text-white text-[10px] bg-white/20 hover:bg-white/40 rounded-full w-5 h-5 flex items-center justify-center backdrop-blur-sm">
                                     <i class="fa-solid fa-expand text-[8px]"></i>
                                 </span>
@@ -686,6 +778,15 @@
                 item.innerHTML = studentHeader + picturesHtml;
                 container.appendChild(item);
             });
+
+            if (!hasMatch) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">No matching student or artwork found.</p>`;
+            }
+        }
+
+        function filterStatusList() {
+            const query = document.getElementById('statusSearchInput').value;
+            renderStatusList(query);
         }
 
         function cleanImageUrl(url) {
@@ -748,6 +849,11 @@
                 return;
             }
 
+            if (studentSubmissionsMap.has(currentSelectedStudent.name)) {
+                alert("You have already submitted your artwork choices.");
+                return;
+            }
+
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Submitting...`;
@@ -773,6 +879,7 @@
                 }
                 selectedArtworks.forEach(a => {
                     claimedArtworkNos.add(a.no);
+                    artworkOwnerMap.set(a.no.toString().trim(), sName);
                     studentSubmissionsMap.get(sName).push(a.no);
                 });
 
@@ -793,12 +900,12 @@
         function showSuccessScreen(name) {
             const main = document.querySelector('main');
             main.innerHTML = `
-                <div class="bg-white rounded-3xl p-8 text-center shadow-sm border border-slate-100 my-10 space-y-4">
+                <div class="bg-src rounded-3xl bg-white p-8 text-center shadow-sm border border-slate-100 my-10 space-y-4">
                     <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner">
                         <i class="fa-solid fa-check"></i>
                     </div>
                     <h2 class="text-xl font-bold text-slate-800">Successfully Submitted!</h2>
-                    <p class="text-xs text-slate-600 leading-relaxed">Thank you, <span class="font-semibold text-slate-800">${name}</span>. Your 2 artwork choices have been securely saved.</p>
+                    <p class="text-xs text-slate-600 leading-relaxed">Thank you, <span class="font-normal text-slate-800">${name}</span>. Your 2 artwork choices have been securely saved.</p>
                     <button type="button" onclick="location.reload()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-2xl text-xs shadow-lg shadow-indigo-500/25 transition mt-4">
                         Make Another Selection
                     </button>
@@ -808,6 +915,8 @@
         }
 
         function openStatusModal() {
+            document.getElementById('statusSearchInput').value = '';
+            renderStatusList();
             document.getElementById('statusModal').classList.remove('hidden');
         }
 
@@ -815,14 +924,109 @@
             document.getElementById('statusModal').classList.add('hidden');
         }
 
-        function openImageModal(imgSrc, caption) {
+        function openImageModal(imgSrc, caption, artworkNo) {
+            activeModalArtworkNo = artworkNo;
             document.getElementById('modalImg').src = imgSrc;
             document.getElementById('modalCaption').textContent = caption;
+            
+            let resolvedName = '';
+            if (artworkNo) {
+                let cleanNo = artworkNo.toString().trim();
+                resolvedName = artworkOwnerMap.get(cleanNo) || (!isNaN(cleanNo) ? artworkOwnerMap.get(Number(cleanNo).toString()) : '');
+            }
+            if (!resolvedName && currentSelectedStudent) {
+                resolvedName = currentSelectedStudent.name;
+            }
+            
+            const nameEl = document.getElementById('modalStudentNameText');
+            if (resolvedName) {
+                nameEl.textContent = resolvedName.toUpperCase();
+                nameEl.style.display = 'block';
+            } else {
+                nameEl.textContent = '';
+                nameEl.style.display = 'none';
+            }
+
             document.getElementById('imageModal').classList.remove('hidden');
         }
 
         function closeImageModal() {
             document.getElementById('imageModal').classList.add('hidden');
+            activeModalArtworkNo = null;
+        }
+
+        function downloadArtworkWithLabel() {
+            const modalImg = document.getElementById('modalImg');
+            let resolvedName = '';
+            if (activeModalArtworkNo) {
+                let cleanNo = activeModalArtworkNo.toString().trim();
+                resolvedName = artworkOwnerMap.get(cleanNo) || (!isNaN(cleanNo) ? artworkOwnerMap.get(Number(cleanNo).toString()) : '');
+            }
+            if (!resolvedName && currentSelectedStudent) {
+                resolvedName = currentSelectedStudent.name;
+            }
+            resolvedName = resolvedName ? resolvedName.toUpperCase() : 'UNKNOWN';
+
+            const downloadBtn = document.getElementById('downloadBtn');
+            const originalBtnText = downloadBtn.innerHTML;
+            downloadBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Generating file...`;
+            downloadBtn.disabled = true;
+
+            const imageObj = new Image();
+            imageObj.crossOrigin = "anonymous";
+            
+            imageObj.src = "https://images.weserv.nl/?url=" + encodeURIComponent(modalImg.src.replace(/^https?:\/\//, ''));
+
+            imageObj.onload = function () {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                canvas.width = imageObj.naturalWidth || 800;
+                canvas.height = (imageObj.naturalHeight || 800) + 120;
+
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.drawImage(imageObj, 0, 0);
+
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, canvas.height - 120, canvas.width, 120);
+
+                ctx.fillStyle = "#000000";
+                ctx.font = "36px sans-serif";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(resolvedName, canvas.width / 2, canvas.height - 75);
+
+                ctx.fillStyle = "#334155";
+                ctx.font = "20px sans-serif";
+                ctx.fillText(`EXHIBITION ARTWORK #${activeModalArtworkNo || 'PREVIEW'}`, canvas.width / 2, canvas.height - 30);
+
+                canvas.toBlob(function(blob) {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `Artwork_${activeModalArtworkNo || 'Preview'}_${resolvedName.replace(/\s+/g, '_')}.jpg`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    downloadBtn.innerHTML = originalBtnText;
+                    downloadBtn.disabled = false;
+                }, 'image/jpeg', 0.95);
+            };
+
+            imageObj.onerror = function() {
+                const link = document.createElement('a');
+                link.href = modalImg.src;
+                link.target = '_blank';
+                link.download = `Artwork_${activeModalArtworkNo || 'Preview'}_${resolvedName.replace(/\s+/g, '_')}.jpg`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                downloadBtn.innerHTML = originalBtnText;
+                downloadBtn.disabled = false;
+            };
         }
     </script>
 </body>
