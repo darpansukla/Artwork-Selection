@@ -79,6 +79,39 @@
                     </div>
                 </div>
 
+                <!-- LIVE STATS BANNER -->
+                <div class="grid grid-cols-1 gap-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="glass-card rounded-2xl p-3.5 flex items-center space-x-3 shadow-sm border border-slate-100">
+                            <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm flex-shrink-0">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                            <div>
+                                <p class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Total Paintings selected</p>
+                                <h4 id="homeTotalPaintings" class="text-sm font-black text-slate-900 mt-0.5">0</h4>
+                            </div>
+                        </div>
+                        <div class="glass-card rounded-2xl p-3.5 flex items-center space-x-3 shadow-sm border border-slate-100">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm flex-shrink-0">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div>
+                                <p class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Total Students selected</p>
+                                <h4 id="homeTotalStudents" class="text-sm font-black text-slate-900 mt-0.5">0</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-3.5 flex items-center space-x-3 shadow-sm border border-slate-100">
+                        <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-sm flex-shrink-0">
+                            <i class="fa-solid fa-paintbrush"></i>
+                        </div>
+                        <div>
+                            <p class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Total Painting available</p>
+                            <h4 id="homeTotalAvailable" class="text-sm font-black text-slate-900 mt-0.5">0</h4>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
                     <div onclick="switchToStudentSelect()" class="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-md transition cursor-pointer group">
                         <div class="space-y-3">
@@ -220,7 +253,7 @@
             <i class="fa-solid fa-palette text-indigo-500 text-[10px]"></i>
             <span class="h-px w-12 bg-slate-200"></span>
         </div>
-        <p class="text-slate-500 font-semibold tracking-wide">Exhibition Artwork Selection System[cite: 1]</p>
+        <p class="text-slate-500 font-semibold tracking-wide">Exhibition Artwork Selection System</p>
         <p class="text-slate-600 font-bold">Designed & Developed by <span class="text-indigo-600">Darpan Sukla</span></p>
         <p class="text-[10px] text-slate-400 uppercase tracking-widest pt-1">Art Makes A Brighter Tomorrow</p>
     </footer>
@@ -350,9 +383,20 @@
                     loadRegistrationData(),
                     loadStatusAndGalleryData()
                 ]);
+                updateHomeStats();
             } catch (e) {
                 console.error("Data loading warning:", e);
             }
+        }
+
+        function updateHomeStats() {
+            let totalSelectedPaintings = claimedArtworkNos.size;
+            let totalStudentsCount = studentSubmissionsMap.size;
+            let availablePaintingsCount = allArtworks.filter(art => art.no && art.link && !claimedArtworkNos.has(art.no)).length;
+
+            document.getElementById('homeTotalPaintings').textContent = totalSelectedPaintings;
+            document.getElementById('homeTotalStudents').textContent = totalStudentsCount;
+            document.getElementById('homeTotalAvailable').textContent = availablePaintingsCount;
         }
 
         async function loadRegistrationData() {
@@ -394,6 +438,7 @@
                 }
 
                 populateUnifiedDropdown('');
+                updateHomeStats();
             } catch (err) {
                 console.error("Error loading registration data", err);
             }
@@ -478,6 +523,7 @@
                 }
 
                 renderStatusList();
+                updateHomeStats();
 
                 if (!document.getElementById('categoryIconsSection').classList.contains('hidden')) {
                     renderCategoryIcons();
@@ -570,6 +616,7 @@
         function backToHome() {
             document.getElementById('studentSelectionSection').classList.add('hidden');
             document.getElementById('homeDashboard').classList.remove('hidden');
+            updateHomeStats();
         }
 
         function proceedToCategories() {
@@ -600,6 +647,7 @@
             document.getElementById('homeDashboard').classList.remove('hidden');
             selectedArtworks = [];
             updateUIState();
+            updateHomeStats();
         }
 
         function renderCategoryIcons() {
@@ -885,6 +933,7 @@
 
                 showSuccessScreen(sName);
                 renderStatusList();
+                updateHomeStats();
 
                 selectedArtworks = [];
                 updateUIState();
